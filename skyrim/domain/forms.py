@@ -1,5 +1,5 @@
 from django import forms
-from ..data.models.damage import Race,Spell
+from skyrim.data.models import Race,Spell
 from django.forms import widgets
 
 class FormPlayer(forms.Form):

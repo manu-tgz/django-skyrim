@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class SkyrimConfig(AppConfig):
+class DataConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'skyrim'
+    name = 'skyrim.data'

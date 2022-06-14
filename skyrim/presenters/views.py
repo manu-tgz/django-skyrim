@@ -1,10 +1,10 @@
 from typing import Dict
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from ..data.models.battle import Battle,Place,PlaceType,Winner,BattleCharacter,Event
-from ..data.models.character import Character,Beast,Player,KnownSpell
-from ..data.models.damage import DamageType, Attack, Spell,Blow,Race,PlayerRace
-from ..usecases.forms import FormPlayer
+from skyrim.data.models import Battle,Place,PlaceType,Winner,BattleCharacter,Event
+from skyrim.data.models import Character,Beast,Player, KnownSpell
+from skyrim.data.models import DamageType, Attack, Spell,Blow,Race,PlayerRace
+from skyrim.domain.forms import FormPlayer
 
 
 def index(request):
