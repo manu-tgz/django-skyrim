@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% block head %}
+            {% include '../include/head.html' %}
+        {% endblock head %}
+    </head>
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <!-- Site wrapper -->
+        <div class="wrapper">
+            {% block header %}{% endblock header %}
+            <!-- Main Sidebar Container -->
+            {% block sidebar %}{% endblock sidebar %}
+            <!-- Content Wrapper. Contains page content -->
+            {% block content %} {% endblock content %}
+            <!-- /.content-wrapper -->
+            {% include '../include/footer.html' %}
+            <!-- Control Sidebar -->
+            <aside class="control-sidebar control-sidebar-dark">
+                <!-- Control sidebar content goes here -->
+            </aside>
+            <!-- /.control-sidebar -->
+        </div>
+        <!-- ./wrapper -->
+        {% include '../include/scripts.html' %}
+    </body>
+</html>
