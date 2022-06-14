@@ -1,0 +1,8 @@
+db.sqlite3
+.vscode/*
+
+config/__pycache__/*
+skyrim/migrations/*
+skyrim/__pycache__/*
+skyrim/models/__pycache__/*
+
