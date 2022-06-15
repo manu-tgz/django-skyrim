@@ -14,5 +14,6 @@ urlpatterns=[
     path('query4/',views.query4,name='query4'),
     path('query5/',views.query5,name='query5'),
     path('query6/',views.query6,name='query6'),
+    path('test/',views.PlayerByUserView.as_view(), name='player_list'),
 
 ]

@@ -5,7 +5,8 @@ from skyrim.data.models import Battle,Place,PlaceType,Winner,BattleCharacter,Eve
 from skyrim.data.models import Character,Beast,Player, KnownSpell
 from skyrim.data.models import DamageType, Attack, Spell,Blow,Race,PlayerRace
 from skyrim.domain.forms import FormPlayer
-
+from django.views.generic import ListView, DetailView
+from skyrim.usecases.Listing import *
 
 def index(request):
     return render(request,'index.html')
@@ -79,3 +80,23 @@ def query5(request):
 
 def query6(request):
     return render(request,'query6.html')
+
+
+class PlayerByUserView(ListView):
+    # TODO: Request.user
+    queryset = GetPlayerByUser(1)
+    template_name = "test.html" 
+    
+class PlayerDetailView(DetailView):
+    queryset = GetPlayer(1)
+    template_name = "test.html"
+    
+class BeastListView(ListView):
+    # REquest.user
+    queryset = GetBeastList(1)
+    template_name = "test.html"
+    
+class BeastDetailView(DetailView):
+    queryset = GetBeast(1)
+    template_name = "test.html"
+    
