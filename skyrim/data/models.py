@@ -56,6 +56,19 @@ class PlayerRace(models.Model):
         return Race.objects.get(pk=self.id_race.id).race_name
 
 
+class PlaceType(models.Model):
+    type = models.CharField("place type", max_length=30, unique=True)
+
+    def __str__(self) -> str:
+        return self.type
+
+class Place(models.Model):
+    place_name = models.CharField("place name", max_length=30, unique=True)
+    place_type = models.ForeignKey(PlaceType, verbose_name="place type", on_delete=models.CASCADE)
+#   place_image = models.URLField("image", unique=True)
+
+    def __str__(self) -> str:
+        return self.place_name
 
 class Character(models.Model):
     character_name = models.CharField("character name", max_length=30, unique=True)
@@ -73,9 +86,11 @@ class Character(models.Model):
     def __str__(self) -> str:
         return self.character_name
 
+
 class Beast(models.Model):
-    id_character = models.ForeignKey(Character, verbose_name="character id", on_delete=models.CASCADE)
+    id_character = models.OneToOneField(Character, verbose_name="character id", on_delete=models.CASCADE)
     id_attack = models.ForeignKey(Blow, verbose_name="attack id", on_delete=models.CASCADE)
+    place = models.ManyToManyField(Place, verbose_name="place id")
 
     def __str__(self) -> str:
         return Character.objects.get(pk=self.id_character.id).character_name
@@ -98,31 +113,9 @@ class KnownSpell(models.Model):
             ),]
 
     def __str__(self) -> str:
-        return Spell.objects.get(pk=self.id_spell.id).spell_name
+        return Spell.objects.get(pk = self.id_spell.id).spell_name
 
 
-class PlaceType(models.Model):
-    type = models.CharField("place type", max_length=30, unique=True)
-
-    def __str__(self) -> str:
-        return self.type
-
-class Place(models.Model):
-    place_name = models.CharField("place name", max_length=30, unique=True)
-    place_type = models.ForeignKey(PlaceType, verbose_name="place type", on_delete=models.CASCADE)
-#   place_image = models.URLField("image", unique=True)
-
-    def __str__(self) -> str:
-        return self.place_name
-
-class BeastLive(models.Model):
-    id_beast = models.ForeignKey(Beast, verbose_name="beast id", on_delete=models.CASCADE)
-    id_place = models.ForeignKey(Place, verbose_name="place id", on_delete=models.CASCADE)
-
-    def __str__(self) -> str:
-        return "{} live in {}".format(
-            Character.objects.get(pk=Beast.objects.get(pk=self.id_beast.id).id).character_name,
-            Place.objects.get(pk=self.id_place.id).place_name)
 
 class Battle(models.Model):
     place = models.ForeignKey(Place, verbose_name="place", on_delete=models.CASCADE)

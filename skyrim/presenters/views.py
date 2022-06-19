@@ -1,10 +1,13 @@
 from typing import Dict
+from webbrowser import get
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from skyrim.data.models import Battle,Place,PlaceType,Winner,BattleCharacter,Event
 from skyrim.data.models import Character,Beast,Player, KnownSpell
 from skyrim.data.models import DamageType, Attack, Spell,Blow,Race,PlayerRace
 from skyrim.domain.forms import FormPlayer
+
+
 
 
 def index(request):
@@ -79,3 +82,5 @@ def query5(request):
 
 def query6(request):
     return render(request,'query6.html')
+
+

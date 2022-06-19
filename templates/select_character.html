@@ -1,0 +1,66 @@
+
+        <h1>Principio</h1> 
+
+        {% if pagination.wrong_page %}
+        <h1>Pagina incorrecta</h1>
+        {% else %}
+        <h1>Pagina correcta</h1>
+            {% if pagination.has_previous %}
+                <h1>Tiene previous</h1>
+                <a href="{{pagination.previous_url}}" >Anterior</a>
+            {% endif %}
+        
+            {% if pagination.has_next %}
+                <h1>Tiene next</h1>
+                <a href="{{pagination.next_url}}" >Siguiente</a>
+            {% endif %}
+        {% endif %}
+        <h1>Final</h1>
+
+            <table>
+                <thead>
+                    <td>Nombre</td>
+                    <td>Raza</td>
+                    <td>Puntos de Vida</td>
+                    <td>Creador</td>
+                    <td>Tipo</td>
+                </thead>
+                {%for character in character_list%}
+                    <tr>
+                        <td>{{character.Nombre}}</td>
+                        <td>{{character.Raza_label}}</td>
+                        <td>{{character.Puntos_de_Vida}}</td>
+                        <td>{{character.Creador_label}}</td>
+                        <td>{{character.Tipo}}</td>
+                    </tr>
+                {% endfor %}    
+            </table>
+            <ul>
+                {%for item in users_list%}
+                <li>{{item.id}}  +  {{item.username}}</li>
+                {%endfor%}
+            </ul>
+            
+            <ul>
+                {%for item in races_list%}
+                <li>{{item.id}}  +  {{item.race_name}} + {{item.weakness_id}}</li>
+                {%endfor%}
+            </ul>
+            <form method="get">
+                {% csrf_token %}
+                <!-- texto -->
+                <input type="text" name = "character_name__icontains">
+                <!-- numero -->
+                <input type="text" name = "health_points__gte">
+                <!-- numero -->
+                <input type="text" name = "health_points__lte">
+                <!-- select  de user_list, usa username como opcion y id como value-->
+                <input type="text" name = "id_client">
+                <!-- select  de race_list, usa race_name como opcion y id como value-->
+                <input type="text" name = "race_type">
+                <!-- select los type son beast o player-->
+                <input type="text" name = "type">
+                <button class="btn btn-primary" type="submit">Buscar</button>
+            </form>
+            
+    

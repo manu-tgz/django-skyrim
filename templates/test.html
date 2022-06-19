@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    </head>
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <!-- Site wrapper -->
+        <div class="wrapper">
+            <table style="HEIGHT:100%;WIDTH:100%;" border=1> <tr align="center" bottom="middle">
+                <caption>Tabla de prueba</caption>
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>id_character</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in object_list  %}
+                        <tr>
+                            <td>{{object.id}}</td>
+                            <td>{{object.id_character}}</td>
+                        </tr>
+                    {% endfor %}
+                  
+                </tbody>
+            </table
+            <aside class="control-sidebar control-sidebar-dark">
+                <!-- Control sidebar content goes here -->
+            </aside>
+            <!-- /.control-sidebar -->
+        </div>
+        <!-- ./wrapper -->
+    </body>
+</html>

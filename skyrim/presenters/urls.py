@@ -1,6 +1,9 @@
 from django import views
 from django.urls import path
 from . import views
+from .selectcharacter.views import select_character_view
+from .playerlist.views import PlayerByUserView
+from .beastlist.views import BeastByUserView
 
 urlpatterns=[
     path('',views.index, name='index'),
@@ -14,5 +17,8 @@ urlpatterns=[
     path('query4/',views.query4,name='query4'),
     path('query5/',views.query5,name='query5'),
     path('query6/',views.query6,name='query6'),
-
+    
+    path('player_list/', PlayerByUserView.as_view(), name='player_list'),
+    path('beast_list/', BeastByUserView.as_view(), name='beast_list'),
+    path('<int:battle_id>/',select_character_view,name = 'list_player'),
 ]
