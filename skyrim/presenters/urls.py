@@ -1,6 +1,7 @@
 from django import views
 from django.urls import path
 from . import views
+from skyrim.presenters.Select_Character_View.select_character_view import select_character_view
 
 urlpatterns=[
     path('',views.index, name='index'),
@@ -14,6 +15,7 @@ urlpatterns=[
     path('query4/',views.query4,name='query4'),
     path('query5/',views.query5,name='query5'),
     path('query6/',views.query6,name='query6'),
-    path('test/',views.PlayerByUserView.as_view(), name='player_list'),
-
+    path('player_list/',views.PlayerByUserView.as_view(), name='player_list'),
+    path('beast_list/',views.BeastByUserView.as_view(), name='beast_list'),
+    path('<int:battle_id>/',select_character_view,name = 'list_player'),
 ]
