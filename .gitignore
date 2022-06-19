@@ -1,10 +1,4 @@
-db.sqlite3
 .vscode/*
-
-skyrim/data/migrations/*
-skyrim/domain/migrations/*
-skyrim/presenters/migrations/*
-skyrim/usecases/migrations/*
 
 __pycache__/
 
