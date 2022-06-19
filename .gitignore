@@ -1,25 +1,10 @@
 db.sqlite3
 .vscode/*
 
-config/__pycache__/*
-skyrim/__pycache__/*
-
-skyrim/data/__pycache__/*
 skyrim/data/migrations/*
-skyrim/data/migrations/__pycache__/*
-skyrim/data/models/__pycache__/*
-
-skyrim/domain/__pycache__/*
 skyrim/domain/migrations/*
-skyrim/domain/migrations/__pycache__/*
-
-skyrim/presenters/__pycache__/*
 skyrim/presenters/migrations/*
-skyrim/presenters/migrations/__pycache__/*
-
-skyrim/usecases/__pycache__/*
 skyrim/usecases/migrations/*
-skyrim/usecases/migrations/__pycache__/*
 
-
+__pycache__/
 
