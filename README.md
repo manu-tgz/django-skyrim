@@ -12,4 +12,6 @@ Aquí se encontrarán todos los casos de usos, la lógica de la aplicación. Y l
 ## Presenters
 En esta capa estarán todas las vistas y el archivo url.py
 
+## UI
+Los template: el frontend
 
