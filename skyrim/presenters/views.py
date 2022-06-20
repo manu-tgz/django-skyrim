@@ -7,9 +7,6 @@ from skyrim.data.models import Character,Beast,Player, KnownSpell
 from skyrim.data.models import DamageType, Attack, Spell,Blow,Race,PlayerRace
 from skyrim.domain.forms import FormPlayer
 
-
-
-
 def index(request):
     return render(request,'index.html')
 

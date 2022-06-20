@@ -4,6 +4,14 @@ from django.db import OperationalError
 
 
 def get_player_list(user_id):
+    """_summary_
+
+    Args:
+        user_id: The user who desires to obtain his players
+
+    Returns:
+        queryset: The User Players
+    """
     try:
         players = Player.objects.filter(id_character__id_client = user_id)
     except ObjectDoesNotExist:
