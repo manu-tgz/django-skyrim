@@ -1,9 +1,11 @@
 from django import views
 from django.urls import path
 from . import views
-from .selectcharacter.views import select_character_view
-from .playerlist.views import PlayerByUserView, PlayerView
-from .beastlist.views import BeastByUserView, BeastView
+from .character.views import select_character_view
+from .player.views import PlayerByUserView, PlayerView
+from .beast.views import BeastByUserView, BeastView
+from .battle import generar_batalla_aleatoria_view
+
 
 urlpatterns=[
     path('',views.index, name='index'),
@@ -23,4 +25,6 @@ urlpatterns=[
     path('beast_list/', BeastByUserView.as_view(), name='beast_list'),
     path('beast/<int:beast_id>/', BeastView.as_view(), name='beast'),
     path('<int:battle_id>/',select_character_view,name = 'list_player'),
+    path('generar_batalla_aleatoria/<int:battle_id>/',generar_batalla_aleatoria_view, name = 'ran_battle_gen')
+    
 ]

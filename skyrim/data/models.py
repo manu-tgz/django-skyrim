@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
 
-
 class DamageType(models.Model):
     type = models.CharField("damage type", max_length=15, unique=True)
     
@@ -26,11 +25,16 @@ class Attack(models.Model):
         ]
     
     def __str__(self) -> str:
-        return "{} {}".format(self.damage_point, DamageType.objects.get(pk=self.attack_type.id).type)
+        return "{} {}".format(self.damage_point, self.attack_type.type)
 
 class Spell(models.Model):
     spell_name = models.CharField("attack name", max_length=30, unique=True)
     id_spell = models.OneToOneField(Attack, verbose_name="spell id", primary_key=True, on_delete=models.CASCADE)
+
+    def save(self, force_insert, force_update, using, update_fields) -> None:
+        if(not(Blow.objects.filter(id_blow=self.id_spell).count()==0)
+        ): raise ValueError("esta entidad ya es un blow")
+        return super().save(force_insert, force_update, using, update_fields)
 
     def  __str__(self) -> str:
         return self.spell_name
@@ -38,9 +42,13 @@ class Spell(models.Model):
 class Blow(models.Model):
     id_blow = models.OneToOneField(Attack, verbose_name="blow id", primary_key=True, on_delete=models.CASCADE)
 
+    def save(self, force_insert, force_update, using, update_fields) -> None:
+        if(not(Spell.objects.filter(id_spell=self.id_blow).count()==0)
+        ): raise ValueError("esta entidad ya es un spell")
+        return super().save(force_insert, force_update, using, update_fields)
+
     def  __str__(self) -> str:
-        return "{} {} blow".format(Attack.objects.get(pk=self.id_blow.id).damage_point, 
-            DamageType.objects.get(pk=Attack.objects.get(pk=self.id_blow.id).attack_type.id).type)
+        return "{} {} blow".format(self.id_blow.damage_point, self.id_blow.attack_type.type)
 
 class Race(models.Model):
     race_name = models.CharField("race name", max_length=30, unique=True)
@@ -53,7 +61,7 @@ class PlayerRace(models.Model):
     id_race = models.OneToOneField(Race, verbose_name="ID", primary_key= True, on_delete=models.CASCADE)
 
     def  __str__(self) -> str:
-        return Race.objects.get(pk=self.id_race.id).race_name
+        return self.id_race.race_name
 
 
 class PlaceType(models.Model):
@@ -76,7 +84,6 @@ class Character(models.Model):
     health_points = models.IntegerField("health points")
     id_client = models.ForeignKey(User, verbose_name="user id", on_delete=models.CASCADE)
 
-
     class Meta:
         constraints = [models.CheckConstraint(
             name="health point constraint",
@@ -88,18 +95,30 @@ class Character(models.Model):
 
 
 class Beast(models.Model):
-    id_character = models.OneToOneField(Character, verbose_name="character id", on_delete=models.CASCADE)
+    id_character = models.OneToOneField(Character , verbose_name="character id", on_delete=models.CASCADE)
     id_attack = models.ForeignKey(Blow, verbose_name="attack id", on_delete=models.CASCADE)
     place = models.ManyToManyField(Place, verbose_name="place id")
 
+    def save(self, force_insert, force_update, using, update_fields) -> None:
+        if(not(Player.objects.filter(id_character=self.id_character).count()==0)
+        ): raise ValueError("esta entidad ya es un player")
+        return super().save(force_insert, force_update, using, update_fields)
+
     def __str__(self) -> str:
-        return Character.objects.get(pk=self.id_character.id).character_name
+        return self.id_character.character_name
 
 class Player(models.Model):
-    id_character = models.ForeignKey(Character, verbose_name="Character id", on_delete=models.CASCADE)
+    id_character = models.OneToOneField(Character, verbose_name="Character id", on_delete=models.CASCADE)
+
+    def save(self, force_insert, using) -> None:
+        if(not(Beast.objects.filter(id_character=self.id_character).count()==0)
+        ): raise ValueError("esta entidad ya es un beast")
+        if(not(PlayerRace.objects.contains(self.id_character.race_type))
+        ): raise ValueError("la raza tiene que ser de PlayerRace")
+        return super().save(force_insert, using)
 
     def __str__(self) -> str:
-        return Character.objects.get(pk=self.id_character.id).character_name
+        return self.id_character.character_name
 
 class KnownSpell(models.Model):
     id_player = models.ForeignKey(Player, verbose_name="player id", on_delete=models.CASCADE)
@@ -113,9 +132,7 @@ class KnownSpell(models.Model):
             ),]
 
     def __str__(self) -> str:
-        return Spell.objects.get(pk = self.id_spell.id).spell_name
-
-
+        return self.id_spell.spell_name
 
 class Battle(models.Model):
     place = models.ForeignKey(Place, verbose_name="place", on_delete=models.CASCADE)
@@ -129,14 +146,14 @@ class Battle(models.Model):
         ),]
 
     def __str__(self) -> str:
-        return "battle {} in {}".format(self.pk, Place.objects.get(pk=self.place.id).place_name)
+        return "battle {} in {}".format(self.pk, self.place.place_name)
 
 class Winner(models.Model):
     id_battle = models.OneToOneField(Battle, verbose_name="battle id", primary_key=True, on_delete=models.CASCADE)
     winner = models.ForeignKey(Character, verbose_name="winner", on_delete=models.CASCADE)
 
     def  __str__(self) -> str:
-        return "the winner in the battle {} is {}".format(self.id_battle, Character.objects.get(pk=self.winner.id).character_name)
+        return "the winner in the battle {} is {}".format(self.id_battle, pk=self.winner.character_name)
 
 class BattleCharacter(models.Model):
     battle = models.ForeignKey(Battle, verbose_name="battle id", on_delete=models.CASCADE)
@@ -149,7 +166,7 @@ class BattleCharacter(models.Model):
         ),]
     
     def  __str__(self) -> str:
-        return "{} fight in the battle {}".format(Character.objects.get(pk=self.character.id).character_name, self.battle)
+        return "{} fight in the battle {}".format(self.character.character_name, self.battle)
 
 class Event(models.Model):
     id_event = models.IntegerField("event id")
@@ -158,6 +175,7 @@ class Event(models.Model):
     id_damaged = models.ForeignKey(Character, verbose_name="damaged id", related_name="damaged", on_delete=models.CASCADE)
     id_attack = models.ForeignKey(Attack, verbose_name="attack id", on_delete=models.CASCADE)
     health_points_before = models.IntegerField("health point before")
+    health_points_after = models.IntegerField('health point after')
 
     class Meta:
         constraints = [models.CheckConstraint(
@@ -170,8 +188,8 @@ class Event(models.Model):
     
     def  __str__(self) -> str:
         return "{} attack for {} {} damage to {}".format(
-            Character.objects.get(pk=self.id_attacker.id).character_name,
-            Attack.objects.get(pk=self.id_attack.id).damage_point,
-            Attack.objects.get(pk=self.id_attack.id).attack_type,
-            Character.objects.get(pk=self.id_damaged.id).character_name,
+            self.id_attacker.character_name,
+            self.id_attack.damage_point,
+            self.id_attack.attack_type,
+            self.id_damaged.character_name
             )

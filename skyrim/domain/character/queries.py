@@ -1,15 +1,19 @@
 
-from decimal import InvalidOperation
 from pickle import TRUE
 from django.core.paginator import Paginator
 from skyrim.data.models import Character
 from django.db.models import Q, Value, CharField
 
+
+
 def get_character_from_place(query, paginate_by = None):
     result = Character.objects.all()
 
     #general filters
-
+    value = query.get('id',None)
+    if(not value == None and not value[0] == ""):
+        result = result.filter(id = value[0])
+        
     value = query.get('character_name__icontains',None)
     if(not value == None and not value[0] == ""):
         result = result.filter(character_name__icontains = value[0])
@@ -55,9 +59,10 @@ def get_character_from_place(query, paginate_by = None):
     elif type_value[0] == 'beast':
         result = beasts
     else:
-        raise InvalidOperation('No existe el tipo ' + type_value)
+        raise Exception('No existe el tipo ' + type_value)
     
     # añadiendo paginacion
+
     result = result.order_by('id')
     dict_arr_result = []
 
@@ -78,6 +83,7 @@ def get_character_from_place(query, paginate_by = None):
             result = []
             dict_arr_result[0]['wrong_page'] = TRUE
 
+    # Serializando
     for item in result:
         dict_arr_result.append({
             'Nombre':item.character_name,
@@ -89,5 +95,4 @@ def get_character_from_place(query, paginate_by = None):
             'Tipo':item.type,
         })
     return dict_arr_result
-    # return result.values_list()
     
