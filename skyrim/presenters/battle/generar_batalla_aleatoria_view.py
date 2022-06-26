@@ -4,7 +4,7 @@ from skyrim.usecases.generar_batalla_aleatoria.operations import generar_batalla
 
 def generar_batalla_aleatoria_view(request, id_battle):
     participantes = request.GET.getlist('contestant',None)
-    if(participantes == None or participantes[0] == ''):
+    if(participantes == None or len(participantes) == 0 or participantes[0] == ''):
         return HttpResponseBadRequest()
     
     register_characters_in_battle_from_id(id_battle,participantes)

@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, F
 from django.contrib.auth.models import User
 
 class DamageType(models.Model):
@@ -31,10 +31,18 @@ class Spell(models.Model):
     spell_name = models.CharField("attack name", max_length=30, unique=True)
     id_spell = models.OneToOneField(Attack, verbose_name="spell id", primary_key=True, on_delete=models.CASCADE)
 
-    def save(self, force_insert, force_update, using, update_fields) -> None:
-        if(not(Blow.objects.filter(id_blow=self.id_spell).count()==0)
-        ): raise ValueError("esta entidad ya es un blow")
-        return super().save(force_insert, force_update, using, update_fields)
+    # class Meta:
+    #     constrains =[
+    #         models.CheckConstraint(
+    #             name="",
+    #             check=Q(~(Blow.objects.filter(id_blow=F('id_spell')).count()==0))
+    #         )
+    #     ]
+    
+    def save(self, *args, **kwargs) -> None:
+       if(not(Blow.objects.filter(id_blow=self.id_spell).count()==0)
+       ): raise ValueError("esta entidad ya es un blow")
+       return super().save(args, kwargs)
 
     def  __str__(self) -> str:
         return self.spell_name
@@ -42,10 +50,10 @@ class Spell(models.Model):
 class Blow(models.Model):
     id_blow = models.OneToOneField(Attack, verbose_name="blow id", primary_key=True, on_delete=models.CASCADE)
 
-    def save(self, force_insert, force_update, using, update_fields) -> None:
+    def save(self, *args, **kwargs) -> None:
         if(not(Spell.objects.filter(id_spell=self.id_blow).count()==0)
         ): raise ValueError("esta entidad ya es un spell")
-        return super().save(force_insert, force_update, using, update_fields)
+        return super().save(args, kwargs)
 
     def  __str__(self) -> str:
         return "{} {} blow".format(self.id_blow.damage_point, self.id_blow.attack_type.type)
@@ -99,10 +107,10 @@ class Beast(models.Model):
     id_attack = models.ForeignKey(Blow, verbose_name="attack id", on_delete=models.CASCADE)
     place = models.ManyToManyField(Place, verbose_name="place id")
 
-    def save(self, force_insert, force_update, using, update_fields) -> None:
+    def save(self, *args, **kwargs) -> None:
         if(not(Player.objects.filter(id_character=self.id_character).count()==0)
         ): raise ValueError("esta entidad ya es un player")
-        return super().save(force_insert, force_update, using, update_fields)
+        return super().save(args, kwargs)
 
     def __str__(self) -> str:
         return self.id_character.character_name
@@ -110,12 +118,12 @@ class Beast(models.Model):
 class Player(models.Model):
     id_character = models.OneToOneField(Character, verbose_name="Character id", on_delete=models.CASCADE)
 
-    def save(self, force_insert, using) -> None:
-        if(not(Beast.objects.filter(id_character=self.id_character).count()==0)
-        ): raise ValueError("esta entidad ya es un beast")
-        if(not(PlayerRace.objects.contains(self.id_character.race_type))
-        ): raise ValueError("la raza tiene que ser de PlayerRace")
-        return super().save(force_insert, using)
+    def save(self,*args, **kwargs) -> None:
+        if(not(Beast.objects.filter(id_character=self.id_character).count()==0)): 
+            raise ValueError("esta entidad ya es un beast")
+        if(PlayerRace.objects.filter(id_race = self.id_character.race_type).count()==0):
+            raise ValueError("la raza tiene que ser de PlayerRace")
+        return super().save(args,kwargs)
 
     def __str__(self) -> str:
         return self.id_character.character_name
@@ -132,12 +140,13 @@ class KnownSpell(models.Model):
             ),]
 
     def __str__(self) -> str:
-        return self.id_spell.spell_name
+        return self.id_player.id_character.character_name + " sabe "+ self.id_spell.spell_name
 
 class Battle(models.Model):
     place = models.ForeignKey(Place, verbose_name="place", on_delete=models.CASCADE)
     date = models.DateField("date")
     time = models.TimeField("time")
+    fighters = models.ManyToManyField(Character, through= 'BattleCharacter')
 
     class Meta:
         constraints =[models.UniqueConstraint(

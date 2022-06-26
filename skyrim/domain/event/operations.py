@@ -39,7 +39,7 @@ def insert_several_events_same_battle(Events):
         #tomar atacado
         damaged_index = characters_id_unique.index(event.id_damaged)
         #insertar evento
-        Event.objects.create(
+        e = Event(
             id_event = event.id_event,
             id_battle = battle,
             id_attacker = characters_unique[attacker_index],
@@ -47,6 +47,6 @@ def insert_several_events_same_battle(Events):
             id_attack = attacks_unique[attack_index],
             health_points_before = event.health_points_before, 
             health_points_after = event.health_points_after)
-    
+        e.save()
     
 

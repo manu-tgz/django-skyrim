@@ -1,4 +1,4 @@
-from skyrim.data.models import Character, Player, Beast
+from skyrim.data.models import Character, Player, Beast, Blow
 from skyrim.domain.attack.classes import Attack_for_Battle
 
 
@@ -37,3 +37,17 @@ def get_attack_from_beast(beast):
     attack_query = beast.id_attack.id_blow
     attack = Attack_for_Battle(attack_query)
     return [attack]
+
+def get_all_blows():
+    blow_list = Blow.objects.all()
+    result = []
+    for blow in blow_list:
+        current = {}
+        attack = blow.id_blow
+        current["id"] = attack.id
+        current["damage"] = attack.damage_point
+        attack_type = attack.attack_type
+        current["attack_type_id"] = attack_type.id
+        current["attack_type_name"] = attack_type.type
+        result.append(current)
+    return result

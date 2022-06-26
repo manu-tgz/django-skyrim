@@ -4,15 +4,15 @@ from . import views
 from .character.views import select_character_view
 from .player.views import PlayerByUserView, PlayerView
 from .beast.views import BeastByUserView, BeastView
-from .battle import generar_batalla_aleatoria_view
+from .battle.generar_batalla_aleatoria_view import generar_batalla_aleatoria_view
 
 
 urlpatterns=[
     path('',views.index, name='index'),
     path('register',views.register,name='register'),
-    path('create_player/', views.create_player, name='create_player'),
-    path('create_beast/',views.create_beast,name='create_beast'),
-    path('create_battle/',views.create_battle,name='create_battle'),
+    path('create_player/', views.create_player_view, name='create_player'),
+    path('create_beast/',views.create_beast_view,name='create_beast'),
+    path('create_battle/',views.create_battle_view,name='create_battle'),
     path('query1/',views.query1,name='query1'),
     path('query2/',views.query2,name='query2'),
     path('query3/',views.query3,name='query3'),
@@ -24,7 +24,7 @@ urlpatterns=[
     path('player/<int:player_id>/', PlayerView.as_view(), name='player'),
     path('beast_list/', BeastByUserView.as_view(), name='beast_list'),
     path('beast/<int:beast_id>/', BeastView.as_view(), name='beast'),
-    path('<int:battle_id>/',select_character_view,name = 'list_player'),
+    path('<int:battle_id>/',select_character_view,name = 'select_character'),
     path('generar_batalla_aleatoria/<int:battle_id>/',generar_batalla_aleatoria_view, name = 'ran_battle_gen')
     
 ]
