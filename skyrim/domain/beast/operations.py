@@ -14,7 +14,8 @@ def create_beast(character_name, race_type_id, health_points, id_client,id_blow,
 
     blow = Blow.objects.get(id_blow = id_blow)
     place = Place.objects.filter(id__in = place_id_list)
-    beast = Beast(id_character = character,
-                id_attack = blow)
+    beast = Beast(
+        id_character = character,
+        id_attack = blow)
     beast.save()
     beast.place.add(*place)
