@@ -1,14 +1,7 @@
 from skyrim.data.models import BattleCharacter, Battle, Character, Place, Winner
 
-def insert_several_characters_same_battle(id_battle, character_ids):
+def register_characters_in_battle_from_id(id_battle, characters_id):
     battle = Battle.objects.get(id = id_battle)
-    for id in character_ids:
-        character = Character.objects.get(id = id)
-        b = BattleCharacter(battle = battle, character = character)
-        b.save()
-
-def register_characters_in_battle_from_id(id_battles, characters_id):
-    battle = Battle.objects.get(id = id_battles)
     characters_id = list(set(characters_id))
     character_list = []
     for id in characters_id:
@@ -17,9 +10,20 @@ def register_characters_in_battle_from_id(id_battles, characters_id):
     register_character_in_battle(battle,character_list)
 
 def register_character_in_battle(battle,character_list):
-    for character in character_list:
-        b = BattleCharacter(battle = battle, character = character)
-        b.save()
+    battle.fighters.add(*character_list)
+
+def remove_character_in_battle_from_id(id_battle, character_id_list):
+    battle = Battle.objects.get(id = id_battle)
+    characters_id = list(set(character_id_list))
+    character_list = []
+    for id in characters_id:
+        character = Character.objects.get(id = id)
+        character_list.append(character)
+    remove_character_in_battle(battle,character_list)
+
+def remove_character_in_battle(battle, character_list):
+    battle.fighters.remove(*character_list)
+
 
 def set_winner_from_id(id_battle,character_id):
     battle = Battle.objects.get(id = id_battle)

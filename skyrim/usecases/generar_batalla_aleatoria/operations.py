@@ -5,7 +5,7 @@ from skyrim.domain.character.classes import Character_for_Battle
 from skyrim.domain.event.classes import Event_for_Battle
 from skyrim.domain. event.operations import insert_several_events_same_battle
 from skyrim.domain.battle.operations import set_winner, set_winner_from_id
-from skyrim.domain.battle.queries import get_characters_from_battle
+from skyrim.domain.battle.queries import get_characters_obj_from_battle
 from random import randint
 from math import floor
 
@@ -38,7 +38,7 @@ def generar_batalla_aleatoria(id_battle):
     #       * ataques con los tipos de ataque y damage
     #       * vida
     # almacenar los datos
-    fighters = get_characters_from_battle(id_battle)
+    fighters = get_characters_obj_from_battle(id_battle)
     for character in fighters:
         cantidad_de_ataques = randint(1,3)
         character.ataques = select_random_subarray(character.ataques,cantidad_de_ataques)

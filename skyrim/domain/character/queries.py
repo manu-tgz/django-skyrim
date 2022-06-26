@@ -1,7 +1,5 @@
-
-from pickle import TRUE
 from django.core.paginator import Paginator
-from skyrim.data.models import Character
+from skyrim.data.models import Character, Battle
 from django.db.models import Q, Value, CharField
 
 
@@ -34,26 +32,22 @@ def get_character_from_place(query, paginate_by = None):
     if(not value == None and not len(value) == 0 and not value[0] == ""):
         result = result.filter(race_type__id = value[0])
     
-    value = query.get('not_in_battle_id',None)
-    if(not value == None and not len(value) == 0 and not value[0] == ""):
-        result = result.filter(race_type__id = value[0])
-    
-    value = query.get('in_battle_id',None)
-    if(not value == None and not len(value) == 0 and not value[0] == ""):
-        result = result.filter(race_type__id = value[0])
-    
-
+    fighters = None
+    battle_id = query.get('battle_id',None)
+    if(not battle_id == None):
+        battle = Battle.objects.get(id = battle_id)
+        fighters = battle.fighters.all()
     #type filters
 
     players = None
     beasts = None
     type_value = query.get('type', None)
 
-    if(type_value == None or len(type_value) == 0 or value[0] == '' or type_value[0] == 'player'):
+    if(type_value == None or len(type_value) == 0 or type_value[0] == '' or type_value[0] == 'player'):
         players = result.exclude(player = None)
         players = players.annotate(type = Value('player', output_field= CharField()))
 
-    if(type_value == None or len(type_value) == 0 or value[0] == '' or type_value[0] == 'beast'):
+    if(type_value == None or len(type_value) == 0 or type_value[0] == '' or type_value[0] == 'beast'):
         value = query.get('place_id',None)
         if(value == None):
             beasts = result.exclude(beast = None)
@@ -85,16 +79,18 @@ def get_character_from_place(query, paginate_by = None):
             value = int(value[0])
         if(1 <= value <= paginator.num_pages):
             result = paginator.page(value)
+            dict_arr_result[0]['page'] = value
             dict_arr_result[0]['has_previous'] = result.has_previous()
             dict_arr_result[0]['has_next'] = result.has_next()
             result = result.object_list
         else:
             result = []
-            dict_arr_result[0]['wrong_page'] = TRUE
+            dict_arr_result[0]['wrong_page'] = True
 
     # Serializando
     for item in result:
-        dict_arr_result.append({
+        current = {
+            'id':item.id,
             'Nombre':item.character_name,
             'Raza_label':item.race_type.race_name,
             'Raza_key':item.race_type.id,
@@ -102,6 +98,10 @@ def get_character_from_place(query, paginate_by = None):
             'Creador_label':item.id_client.username,
             'Creador_key':item.id_client.id,
             'Tipo':item.type,
-        })
+        }
+        if(not battle_id == None):
+            current['in_battle'] = item in fighters
+            
+        dict_arr_result.append(current)
     return dict_arr_result
     
