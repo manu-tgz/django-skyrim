@@ -6,6 +6,7 @@ class ViewTest():
     function = None
     template = None
     status_code = 200
+    redirect= None
     
     def setUp(self):
         # need a browser customer 
@@ -24,11 +25,20 @@ class ViewTest():
         response = self.get_response()
         self.assertEqual(response.status_code,self.status_code)
         self.check_out(response)
-        
+      
+    def uses_redirect(self, response):
+        self.assertEqualI(response['location'], self.redirect)
+    
     def check_out(self, response):
+        if self.redirect is None:
+            return self.check_html(response)  
+        else:
+            self.uses_redirect(response)   
+            
+    def check_html(self, response):
         # TODO: Cuando integren los html
         # self.is_working(response)
-        self.uses_template(response)
+        self.uses_template(response)            
                       
     def uses_template(self, response):
         """Checking what templated are used"""
@@ -40,9 +50,6 @@ class ViewTest():
         html = response.content.decode('utf8')
         self.assertIn("Colocar html aqui", html)
         
-    def test_status_code_is_correct(self):
-        pass
-        
     def get_response(self):
         pass   
      
@@ -50,28 +57,17 @@ class ViewTest():
         abstract = True
         
 class PostViewTest(ViewTest):
-    redirect= None
     
     def get_response(self):
         response = self.client.post(self.url, data=self.get_data())
         return response
-    
-    def uses_redirect(self, response):
-        self.assertEqualI(response['location'], self.redirect)
-    
-    def check_out(self, response):
-        if self.redirect is None:
-            return super().check_out(response)  
-        else:
-            self.uses_redirect(response)  
                    
 class GetViewTest(ViewTest):
 
     def get_response(self):
         response = self.client.get(self.url, data=self.get_data())
         return response
-    
-    
+     
 
 # TODO: Test de get contex data
 # class HomePageTest(TestCase):

@@ -1,7 +1,7 @@
 from django.test import TestCase, RequestFactory
 from skyrim.data.models import *
-from skyrim.presenters.player.views import PlayerByUserView
-from tests.presenters.abstract import ViewTest
+from skyrim.presenters.player.views import PlayerByUserView, PlayerView
+from tests.presenters.abstract import ViewTest, GetViewTest
 from skyrim.presenters.views import create_player_view
                
 class ListPlayerTest():
@@ -27,4 +27,22 @@ class CreatePlayerTest(ViewTest,TestCase):
         response = self.client.get(self.url)
         return response
     
-    
+
+class GetPlayerTest(GetViewTest,TestCase):
+    """CreatePlayerTest"""
+    function = PlayerView().as_view()
+    url = '/create_player/'
+    template = 'create_player.html'
+    status_code = 200
+
+    def setUp(self):
+       super().setUp()
+       fire = DamageType.objects.create(type = 'fire')
+       paladin = Race.objects.create(race_name = 'paladin',weakness = fire)
+       user, created = User.objects.get_or_create(email= '', username='user1', password='ppfn32123')
+       character1 = Character.objects.create(character_name = 'character1',race_type = paladin,health_points = 500,id_client= user)
+       player1 = Player.objects.create(id_character = character1)
+       
+    def get_response(self):
+        response = self.client.get(self.url+"1/")
+        return response    
