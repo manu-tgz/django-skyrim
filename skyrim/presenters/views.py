@@ -2,6 +2,7 @@ from logging import raiseExceptions
 from sys import implementation
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
+from numpy import character
 from skyrim.data.models import Battle,Place,PlaceType,Winner,BattleCharacter,Event
 from skyrim.data.models import Character,Beast,Player, KnownSpell
 from skyrim.data.models import DamageType, Attack, Spell,Blow,Race,PlayerRace
@@ -16,12 +17,12 @@ from skyrim.domain.spell.operations import add_several_known_spells_same_player_
 from skyrim.domain.beast.operations import create_beast
 from skyrim.domain.battle.queries import get_battle , get_winner, get_characters_from_battle, get_battle_stats
 from skyrim.domain.event.queries import get_event_list
-from skyrim.domain.character.queries import get_character_from_place
+from skyrim.domain.character.queries import get_character_from_place, get_character_union_filters_by_user 
 from skyrim.domain.user.operations import edit_user, create_user
 from skyrim.domain.user.queries import get_user ,email_exist, username_exist
 from django.utils import timezone
 from django.http.response import HttpResponseBadRequest
-from skyrim.domain.stats.statistics import BattleDuration, Beast_List, Rank_damage_player, Rank_n_players, Rank_n_spell, used_spell, know_spell
+from skyrim.domain.stats.statistics import BattleDuration, Beast_List, Rank_damage_player, Rank_n_players, Rank_n_attacks, used_spell, know_spell
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from skyrim.domain import forms
@@ -163,7 +164,7 @@ def query4(request):
 
 @login_required
 def query5(request):
-    spells=Rank_n_spell(10)
+    spells=Rank_n_attacks(10)
     return render(request,'query5.html', {'spells':spells})
 
 @login_required
@@ -174,9 +175,12 @@ def query6(request):
 
 @login_required
 def user_profile(request):
-    if request.method=='POST':        
-        id=request.user.id
-        user=get_user(id)
+    context = {}
+    id=request.user.id
+    user=get_user(id)
+    context['my_user'] = user
+    if request.method =='POST':
+        context['from_operation'] = False
         username=request.POST['username'] 
         first_name=request.POST['firstName'] 
         last_name=request.POST['lastName'] 
@@ -185,36 +189,44 @@ def user_profile(request):
         password2=request.POST['password2'] 
 
         if password1==password2:
-            if email_exist(email) and user[0]['email']!=email:
+            if email_exist(email) and user['email']!=email:
                 messages.info(request,'Email Already Used')
+                context['from_operation'] = True
              
-            elif username_exist(username) and user[0]['username']!=username:
+            elif username_exist(username) and user['username']!=username:
                 messages.info(request,'Username Already Used')
+                context['from_operation'] = True
                 
             elif username == "":
                 messages.info(request,'Empty username not allowed')
+                context['from_operation'] = True
 
             elif password1 == "":
                 messages.info(request,'Empty password not allowed')
+                context['from_operation'] = True
 
             else:
-                edit_user(id,first_name,last_name,email, username, password1)
+                edit_user(request,id,first_name,last_name,email, username, password1)
+
                 
         else:
             messages.info(request,'Password Not The Same')
+            context['from_operation'] = True
             
-
-    return render(request,'user_profile.html')
+    id=request.user.id
+    user=get_user(id)
+    context['my_user'] = user
+    return render(request,'user_profile.html',context)
 
 def user_characters(request):
-    query = {}
-    query['id_client'] = [request.user.id]
-    character_list = get_character_from_place(query)
+    value = request.GET.get('query',None)
+    if(value == ""):
+        value = None
+    character_list = get_character_union_filters_by_user(request.user.id, value)
     return render(request,"user_characters.html",{'character_list':character_list})
 
 def login(request):
     return render(request,'login.html')
-
 
 @login_required
 def tables(request):

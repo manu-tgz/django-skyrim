@@ -162,7 +162,7 @@ class Winner(models.Model):
     winner = models.ForeignKey(Character, verbose_name="winner", on_delete=models.CASCADE)
 
     def  __str__(self) -> str:
-        return "the winner in the battle {} is {}".format(self.id_battle, pk=self.winner.character_name)
+        return "the winner in the battle {} is {}".format(self.id_battle, self.winner.character_name)
 
 class BattleCharacter(models.Model):
     battle = models.ForeignKey(Battle, verbose_name="battle id", on_delete=models.CASCADE)

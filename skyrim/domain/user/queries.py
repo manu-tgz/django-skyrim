@@ -6,7 +6,7 @@ def get_all_users():
 
 def get_user(user_id):
     result = User.objects.filter(id = user_id)
-    return result.values('username','email')
+    return result.values('username','email','last_name','first_name')[0]
 
 def email_exist(email):
     return  User.objects.filter(email=email).exists()
