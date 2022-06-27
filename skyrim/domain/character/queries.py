@@ -6,7 +6,6 @@ from django.db.models import Q, Value, CharField
 
 def get_character_from_place(query, paginate_by = None):
     result = Character.objects.all()
-
     #general filters
     value = query.get('id',None)
     if(not value == None and not len(value) == 0 and not value[0] == ""):
@@ -105,3 +104,41 @@ def get_character_from_place(query, paginate_by = None):
         dict_arr_result.append(current)
     return dict_arr_result
     
+
+def get_character_union_filters_by_user(id_user, value = None):
+    user_char = Character.objects.filter(id_client = id_user)
+    result = None
+    user_beast = user_char.exclude(player = None)
+    user_player = user_char.exclude(beast = None)
+    if(not value == None):
+        result = user_char.filter(character_name__startswith = value)
+        temp = user_char.filter(race_type__race_name__startswith = value)
+        result = result.union(temp)
+        if(value.isdigit()):
+            temp = user_char.filter(health_points = int(value))
+        result = result.union(temp)
+        temp = None
+        if("player".startswith(value)):
+            temp = user_player
+        elif"beast".startswith(value):
+            temp = user_beast
+        if(not temp == None):
+            result = result.union(temp)
+    else:
+        result = user_char
+    final_result = []
+    for item in result:
+        current = {
+            'id':item.id,
+            'Nombre':item.character_name,
+            'Raza_label':item.race_type.race_name,
+            'Raza_key':item.race_type.id,
+            'Puntos_de_Vida':item.health_points,
+        }
+        if(item in user_beast):
+            current['Tipo'] = 'beast'
+        else:
+            current['Tipo'] = 'player'
+        final_result.append(current)
+
+    return final_result
