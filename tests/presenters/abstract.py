@@ -1,6 +1,9 @@
 from multiprocessing import context
 from django.urls import resolve
 from django.test import TestCase, Client
+from skyrim.data.models import User
+
+LOGIN_REDIRECT = "/accounts/login/?next="
 
 class ViewTest():
     url =None
@@ -22,7 +25,7 @@ class ViewTest():
         """Generate a correct data
         """
         pass
-    
+        
     def test_root_url(self):
         """Check the view is the correct"""
         found = resolve(self.get_url())
@@ -60,9 +63,7 @@ class ViewTest():
     def uses_template(self, response):
         """Checking what templated are used"""
         prueba = response
-        self.assertTemplateUsed(response,self.template)
-        print("pase---------------------------")            
-        print("pase---------------------------")            
+        self.assertTemplateUsed(response,self.template)          
         
     
     def is_working(self, response):
@@ -87,17 +88,23 @@ class GetViewTest(ViewTest):
     def get_response(self):
         response = self.client.get(self.get_url(), data=self.get_data())
         return response
-     
-# class PostWhitUserTest()
-# TODO: Test de get contex data
-# class HomePageTest(TestCase):
-#     def test_environment_set_in_context(self):
-#         request = RequestFactory().get('/')
-#         view = HomeView()
-#         view.setup(request)
 
-#         context = view.get_context_data()
-#         self.assertIn('environment', context)
+class LoginRequired():
+    def login(self, client):
+       user,created = User.objects.get_or_create(email= 'example@gmail.com', username='user1', password='ppfn32123')
+       client.login(username= user.username, password= user.password) 
+    
+class PostViewTestLoginRequired(LoginRequired, PostViewTest):
+    status_code = 302
+    def setUp(self):
+        super().setUp()
+        self.login(self.client)
+        
+class GetViewTestLoginRequired(LoginRequired, GetViewTest):    
+    status_code = 302
+    def setUp(self):
+        super().setUp()
+        self.login(self.client)    
     
     
     

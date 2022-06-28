@@ -219,7 +219,7 @@ def user_profile(request):
 
 def user_characters(request):
     value = request.GET.get('query',None)
-    if(value == ""):
+    if(value == ""): 
         value = None
     character_list = get_character_union_filters_by_user(request.user.id, value)
     return render(request,"user_characters.html",{'character_list':character_list})

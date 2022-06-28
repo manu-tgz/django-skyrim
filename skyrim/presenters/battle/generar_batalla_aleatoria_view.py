@@ -8,7 +8,7 @@ def generar_batalla_aleatoria_view(request, id_battle):
         return HttpResponseBadRequest()
     
     register_characters_in_battle_from_id(id_battle,participantes)
-    generar_batalla_aleatoria(id_battle,participantes)
+    generar_batalla_aleatoria(id_battle)
     
 
         
