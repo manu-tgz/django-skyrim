@@ -1,0 +1,152 @@
+{% extends "base.html"%}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row" style="margin-top: 100px;" >
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse" style="margin-top: 100px;">
+          <div class="position-sticky pt-3">
+            <ul class="nav nav-pills flex-column mb-auto">
+              <li class="nav-item" >
+                <a class="nav-link text-white  bg-dark" href="{% url 'query1' %}">
+                 <span data-feather="query1" class="align-text-bottom"></span>
+                 Races in Battle
+                </a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link active" aria-current="page" href="{% url 'query2' %}" style="background-color: rgba(11, 10, 10, 0.593) ;">
+                  <span data-feather="query2" class="align-text-bottom"></span>
+                  Winners
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white  bg-dark" href="{% url 'query3' %}">
+                  <span data-feather="query3" class="align-text-bottom"></span>
+                  Battles
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white  bg-dark" href="{% url 'query4' %}">
+                  <span data-feather="query4" class="align-text-bottom"></span>
+                  Damage Points
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white  bg-dark" href="{% url 'query5' %}">
+                  <span data-feather="query5" class="align-text-bottom"></span>
+                  Attacks
+                </a>
+              </li>
+            </ul>
+          </div>
+      </nav>   
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Winners of the Battles</h1>
+      </div>
+      
+      <div><canvas class="my-4 w-100 " id="myChart" width="900" height="380"></canvas></div>
+       <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: [{% for player in players %} '{{player.winner__character_name}}', {% endfor %}],
+              datasets: [{
+                  label: '# Battles',
+                  data: [{% for player in players%} {{player.count}}, {% endfor %}],
+                  backgroundColor: [
+                  'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                  'rgba(54, 162, 235, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+            responsive:true,
+              plugins: {
+                legend: {
+                  labels:{
+                    color:'white',
+                    font: {
+                        size:20,
+                        family: 'Skyrim'
+                      
+                      }
+                  }
+                }
+              
+              },              
+              scales: {
+                y: {
+                    ticks: {
+                      color: 'white',
+                      beginAtZero: true,
+                      font: {
+                        size:16,
+                        family: 'Skyrim'
+                      
+                      }
+                    }
+                      
+                  },
+
+                x: {
+                  ticks: {
+                    color: 'white',
+                    fontSize:18,
+                    beginAtZero: true,
+                    font:{
+                      size:16,
+                      family: 'Skyrim'
+
+                    }
+                  }
+                }
+
+              }
+          }
+        });
+        </script>
+
+        <div class="table-responsive">
+        <table class="table table-striped table-sm text-white">
+          <thead>
+            <tr>
+              <th scope="col">Winner</th>
+              <th scope="col"># Battles</th>
+              
+            </tr>
+          </thead>
+          <tbody >
+            {% for player in players %}
+            <tr>
+            <td style="color: white;">{{player.winner__character_name}}</td>    
+            <td style="color: white;">{{player.count}}</td>  
+          </tr>        
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+
+
+{% endblock %}

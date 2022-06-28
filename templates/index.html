@@ -1,0 +1,55 @@
+ {% extends "base.html"%}
+ {% load static %}
+
+ {% block content %}  
+
+ <div class="container marketing">
+
+     
+   <!-- START THE FEATURETTES -->
+
+
+   <div class="row featurette" style="margin-top: 100px ;">
+     <div class="col-md-7">
+       <h2 class="featurette-heading fw-normal lh-1">Create your own players. <span class="text-white-50">It’ll blow your mind.</span></h2>
+       <p class="lead">Enter this new world and discover its wonder. You won't regret it.</p>
+     </div>
+     <div class="col-md-5">
+       <img src="{% static 'myproject/img/foto9.png' %}" class="rounded featurette-image img-fluid mx-auto" width="500" height="500" >
+        
+     </div>
+   </div>
+
+   <hr class="featurette-divider">
+
+   <div class="row featurette">
+     <div class="col-md-7 order-md-2">
+       <h2 class="featurette-heading fw-normal lh-1">Oh yeah, and you can create beasts too. <span class="text-white-50">See for yourself.</span></h2>
+       <p class="lead">You know, the more, the merrier. Make this adventure one that will not be forgotten.</p>
+     </div>
+     <div class="col-md-5 order-md-1">
+      <img src="{% static 'myproject/img/foto7.png' %}" class="opacity-50 rounded featurette-image img-fluid mx-auto" width="500" height="500">
+
+     </div>
+   </div>
+
+   <hr class="featurette-divider">
+
+   <div class="row featurette">
+     <div class="col-md-7">
+       <h2 class="featurette-heading fw-normal lh-1">And lastly, this one.</h2>
+       <p class="lead">See the stats, learn more skills and improve your form.</p>
+     </div>
+     <div class="col-md-5">
+       <img src="{% static 'myproject/img/foto10.png' %}" class="rounded featurette-image img-fluid mx-auto" width="500" height="500">
+
+     </div>
+   </div>
+
+   <hr class="featurette-divider">
+
+   <!-- /END THE FEATURETTES -->
+
+ </div><!-- /.container -->
+
+{% endblock %}

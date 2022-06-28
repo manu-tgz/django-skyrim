@@ -2,7 +2,6 @@ from logging import raiseExceptions
 from sys import implementation
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
-from numpy import character
 from skyrim.data.models import Battle,Place,PlaceType,Winner,BattleCharacter,Event
 from skyrim.data.models import Character,Beast,Player, KnownSpell
 from skyrim.data.models import DamageType, Attack, Spell,Blow,Race,PlayerRace

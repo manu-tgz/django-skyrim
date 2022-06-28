@@ -1,66 +1,215 @@
+{% extends "base.html"%}
+ {% load static %}
 
-        <h1>Principio</h1> 
+ {% block content %}  
+ <link rel="stylesheet" href="{% static 'progress-bar.css' %}">
 
-        {% if pagination.wrong_page %}
-        <h1>Pagina incorrecta</h1>
-        {% else %}
-        <h1>Pagina correcta</h1>
-            {% if pagination.has_previous %}
-                <h1>Tiene previous</h1>
-                <a href="{{pagination.previous_url}}" >Anterior</a>
-            {% endif %}
-        
-            {% if pagination.has_next %}
-                <h1>Tiene next</h1>
-                <a href="{{pagination.next_url}}" >Siguiente</a>
-            {% endif %}
-        {% endif %}
-        <h1>Final</h1>
 
-            <table>
-                <thead>
-                    <td>Nombre</td>
-                    <td>Raza</td>
-                    <td>Puntos de Vida</td>
-                    <td>Creador</td>
-                    <td>Tipo</td>
-                </thead>
-                {%for character in character_list%}
-                    <tr>
-                        <td>{{character.Nombre}}</td>
-                        <td>{{character.Raza_label}}</td>
-                        <td>{{character.Puntos_de_Vida}}</td>
-                        <td>{{character.Creador_label}}</td>
-                        <td>{{character.Tipo}}</td>
-                    </tr>
-                {% endfor %}    
-            </table>
-            <ul>
-                {%for item in users_list%}
-                <li>{{item.id}}  +  {{item.username}}</li>
-                {%endfor%}
-            </ul>
+<main class="px-3" style="font-size: 14pt;">
+
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">     
+        <div class="card" style="background-color: rgba(0, 0, 0, .1); border-color: whitesmoke; margin-top: 50px; margin-bottom: 200px;">
+            <div class="card-body">
+                <div class="container-bar">
+                    <ul class="progressbar">
+                        <li class="active">Select Place</li>
+                        <li>Select Characters</li>
+                        <li>Battle Results</li>
+                    </ul>
+                </div>
+                <form method="get" class="form">
+
+                <div class="col-4">  <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-top: 50px; margin-right: 200px;">
+                        <i class="fa fa-filter fa-2x" aria-hidden="true"></i>
+                    </button>                
+                </div> 
+                <hr>
+                  <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header bg-dark">
+                              <h5 class="modal-title" id="exampleModalLabel">FILTER</h5>
+                              <button type="button" data-bs-dismiss="modal" class="btn btn-dark"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            </div>
+
+                            <div class="modal-body bg-dark">
+
+                                    {% csrf_token %}
+                                    <div class="col ">
+                                        <!-- texto -->
+                                        <div class="col-6 offset-md-3" style="margin-top: 30px; ">
+                                             <label  class="form-label">Character Name &nbsp;</span></label>
+                                             <input type="text" class="form-control round" name = "character_name__icontains"><br>
+                                         </div>
+                                        <!-- numero -->
+                                        <div class="row">
+                                            <div class="col-4" style="margin-top: 30px; margin-left: 90px;">
+                                                 <label class="form-label">Health Points Min &nbsp;</span></label>
+                                                 <input type="number" class="form-control round" name = "health_points__gte"><br>
+                                             </div>
+                                            <!-- numero -->
+                                            <div class="col-4 " style="margin-top: 30px;  ">
+                                                 <label class="form-label">Health Points Max &nbsp;</span></label>
+                                                 <input type="number" class="form-control round" name = "health_points__lte"><br>
+                                             </div>
+                                        </div>
+
+                                        <div class="col-6 offset-md-3" style="margin-top: 30px; ">
+                                            <label class="form-label">Type of Character &nbsp;</span></label>
+                                            <div class="col-6 offset-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="type" id="inlineRadio1" value="" >
+                                                    <label class="form-check-label" for="inlineRadio1">Any</label>
+                                                </div>
+                                               <div class="form-check">
+                                                 <input class="form-check-input" type="radio" name="type" id="inlineRadio1" value="player" >
+                                                 <label class="form-check-label" for="inlineRadio1">Player</label>
+                                               </div>
+                                               <div class="form-check">
+                                                 <input class="form-check-input" type="radio" name="type" id="inlineRadio2" value="beast">
+                                                 <label class="form-check-label" for="inlineRadio2">Beast</label>
+                                               </div>
+                                            </div>
+
+                                        </div>
+                                        <!-- select  de user_list, usa username como opcion y id como value-->
+                                        <div class="row">
+                                        <div class="col-6" style="margin-top: 30px; margin-bottom: 30px;">
+                                             <label class="form-label">User</label>
+                                             <select class="form-select" name="id_client">
+                                                 <option value="">Any</option>
+                                                 {%for item in users_list%}
+                                                 <option value="{{item.id}}">{{item.username}}</option>
+                                                 {%endfor%}
+                                             </select>
+                                         
+                                       </div>
+
+                                        <!-- select  de race_list, usa race_name como opcion y id como value-->
+
+                                        <div class="col-6" style="margin-top: 30px; margin-bottom: 30px;">
+                                             <label for="race" class="form-label">Race</label>
+                                             <select class="form-select" name="race_type" placeholder="Select">
+                                                <option value="">Any</option>
+                                                 {% for race in races_list %}
+                                                 <option value="{{race.id}}"> {{race.race_name}}</option>
+                                                 {% endfor %}
+                                             </select>
+                                         
+                                       </div>
+                                    </div>
+
+                            </div>
+                            <div class="modal-footer bg-dark">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button class="btn btn-primary" type="submit"  name="action" onclick="myclear()" value = "filter">Apply</button>
+
+                            </div>
+                            </div>
+                            
+
+                        </div>
+                    </div>
+                </div>
+
+
+                    <div class="col" >
+                    
+                        <div class="row" >
+
+                            <div class="table-responsive" style="margin-top: 20px;">
+                                <table class=" table table-dark table-striped">
+                                    <thead>
+                                        <th>Name</th>
+                                        <th>Race</th>
+                                        <th>Health Points</th>
+                                        <th>Creator</td>
+                                        <th>Type of Character</th>
+                                        <th></td>
+                                    </thead>
+                                    {%for character in character_list%}
+                                        <tr>
+                                            <td>{{character.Nombre}}</td>
+                                            <td>{{character.Raza_label}}</td>
+                                            <td>{{character.Puntos_de_Vida}}</td>
+                                            <td>{{character.Creador_label}}</td>
+                                            <td>{{character.Tipo}}</td>
+                                            {% if character.in_battle %}
+                                                <td id="container-{{character.id}}"><button type="button" id="{{character.id}}" onclick="remove(this)" class="btn btn-outline-danger"><i class="fa fa-minus" aria-hidden="true"></i></button></td>
+                                            {%else%}
+                                                <td id="container-{{character.id}}"><button type="button" id="{{character.id}}" onclick="add(this)" class="btn btn-outline-success"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}    
+                                </table>
+
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="row ">
+                                {% if pagination.wrong_page %}
+                                <h1>Wrong Page</h1>
+                                {% else %}
+                            
+                                    
+                                    <div class="col" style="margin-left: 20px;">
+                                        {% if pagination.has_previous %}
+                                        <button  class="btn btn-dark" style="color: white; margin-top: 30px;"  type="submit" name="action" value = "preview"><i class="fa fa-chevron-left fa-2x" aria-hidden="true"></i></button>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="col" style="margin-top: 30px" >
+                                        <h4>{{pagination.page}}</h4>
+                                    </div>
+
+                                   
+                                    <div class="col" style="margin-left: 20px;">
+                                        {% if pagination.has_next %}
+                                        <button  class="btn btn-dark" style="color: white;  margin-top: 30px;"  type="submit" name="action" value = "next"><i class="fa fa-chevron-right fa-2x" aria-hidden="true"></i></button>
+                                        {% endif %}
+                                    </div>
+                                    
+                                {% endif %}                  
+                            </div>
+                        </div>
+
+
+
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3" style="padding: 20px; margin-top: 100px; margin-bottom: 100px;">
+
+                                <button class="w-100 btn btn-primary btn-lg" type="submit"  name="action" value = "start"  >Start Battle</button>
+
+                            </div>
+                        </div>
+                        {% if not_enough_fighters %}
+                            <h1>Not enough fighters in battle</h1>
+                        {% endif %}
+                        <input type="hidden" name="page" value="{{ pagination.page }}">
+                        
+                        <div id = "container-preview_filters">
+                            {% autoescape off %}
+                                {{preview_filters}}
+                            {% endautoescape %}
+                        </div>
+                        <div id = "container-list">
+                        
+                        </div>
+
+                    </div>
+                </form>
+                
+            </div>
+
+        </div>    
+    </div>
+</main>
+
+ <script src="{% static 'select_character/select-characters.js' %}"></script>
             
-            <ul>
-                {%for item in races_list%}
-                <li>{{item.id}}  +  {{item.race_name}} + {{item.weakness_id}}</li>
-                {%endfor%}
-            </ul>
-            <form method="get">
-                {% csrf_token %}
-                <!-- texto -->
-                <input type="text" name = "character_name__icontains">
-                <!-- numero -->
-                <input type="text" name = "health_points__gte">
-                <!-- numero -->
-                <input type="text" name = "health_points__lte">
-                <!-- select  de user_list, usa username como opcion y id como value-->
-                <input type="text" name = "id_client">
-                <!-- select  de race_list, usa race_name como opcion y id como value-->
-                <input type="text" name = "race_type">
-                <!-- select los type son beast o player-->
-                <input type="text" name = "type">
-                <button class="btn btn-primary" type="submit">Buscar</button>
-            </form>
             
+
     
+{% endblock %}

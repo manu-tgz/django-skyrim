@@ -1,0 +1,89 @@
+{% extends "base.html"%}
+{% load static %}
+
+{% block content %}
+
+<main class="px-3" >
+  <!-- <link src="{% static 'multiselect/css/style.css' %}" rel="stylesheet">-->
+  
+  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+          <form class="needs-validation"  novalidate method="POST" action="" >
+            {% csrf_token %}
+            <div class="row">
+
+                  <div class="col-12" style="margin-top: 50px;">
+                    <label for="name" class="form-label" style="font-size: 16pt;">Name &nbsp;</span></label>
+                    <input type="name" class="form-control round" name="name" placeholder="Borkul">
+                  </div>
+
+                  <div class="col-12" style="margin-top: 50px;"">
+                    <label for="health-points" class="form-label" style="font-size: 16pt;">Health Points &nbsp;</label>
+                    <input type="range" class="form-control-range" name="health_points" onInput="$('#rangeval1').html($(this).val())" required>
+                    <span id="rangeval1">50</span>
+                  </div>
+
+                  <div class="row">
+                    <div class="col" style="margin-top: 30px; width: 50%;">
+                    <div>
+                         <label style="font-size: 16pt;">Select Places</label>
+                        <select id="multi_option" multiple name="pedro" data-silent-initial-value-set="false">
+                          {% for place in place_list %}
+                          <option value="{{place.id}}" style="font-family: Skyrim;"> {{place.name}}</option>
+                          {% endfor %}     
+                        </select>
+                    </div>
+                    <script type="text/javascript" src="{% static 'multiselect/js/virtual-select.min.js' %}"></script>
+                    <script type="text/javascript">
+                        VirtualSelect.init({ 
+                          ele: '#multi_option' 
+                        });
+                    </script>
+                   
+                    </div>  
+                    <div class="col" style="margin-top: 30px; ">
+                        <label for="race" class="form-label" style="font-size: 16pt;">Race</label>
+                        <select class="form-select" name="race" required>
+                            <option value=""></option>
+                            {% for race in race_list %}
+                            <option value="{{race.id}}"> {{race.race_name}}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">
+                          Please select a valid country.
+                        </div>
+                      </div>
+
+                      <div class="col" style="margin-top: 30px;"">
+                        <label for="blow" class="form-label" style="font-size: 16pt;">Blow &nbsp;</label>
+                          <select class="form-select round" name="blow" required>
+                            <option value=""></option>
+                            {% for blow in blow_list %}
+                            <option value = {{blow.id}}> {{blow.attack_type_name}} {{blow.damage}}</option>
+                            {% endfor %}
+                          </select>
+                        </div> 
+                  
+                </div>     
+
+            
+
+                <div class="row">
+                  <div class="col-md-6 offset-md-3" style="padding: 20px; margin-top: 100px; margin-bottom: 200px;">
+                      
+                      <button class="w-100 btn btn-primary btn-lg" type="submit" style="font-size: 18pt;">Create</button>
+                                        
+                  </div>
+              </div>   
+              
+              </form>
+
+            </div>
+            
+        </div>      
+
+ 
+</main>
+
+<script type="text/javascript" src="{% static 'list-group/js/jquery.min.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html"%}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'multiselect/css/virtual-select.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'multiselect/css/style.css' %}">
+
+<main class="px-3">
+ 
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <div class="row align-items-center">
+      
+        <form class="needs-validation" novalidate method="POST" action="" id="demoform">
+            <div class="col">
+                {% csrf_token %}
+                <div class="row">                                  
+                               
+                    <div class="col-12" style="margin-top: 50px;">
+                      <label for="name" class="form-label" style="font-size: 16pt;">Name &nbsp;</span></label>
+                      <input type="name" class="form-control round" name="name" placeholder="Dovahkiin" required>
+                      <div class="invalid-feedback">
+                        Valid name is required.
+                      </div>                                  
+                    </div>
+                
+                    <div class="col-12" style="margin-top: 50px;">
+                      <label for="health-points" class="form-label" style="font-size: 16pt;">Health Points &nbsp;</label>
+                      <input type="range" class="form-control-range" name="health_points" onInput="$('#rangeval').html($(this).val())" required>
+                      <span id="rangeval">50</span>
+                    </div>               
+               
+                                              
+                </div>
+
+                <div class="row">
+                    <div class="col-6" style="margin-top: 30px ">
+                    <div >
+                        <label style="font-size: 16pt;">Select Spells</label>
+                        <select id="multi_option" multiple name="pedro" placeholder="Select" data-silent-initial-value-set="false">
+                          {% for spell in spell_list %}
+                          <option value="{{spell.id_spell_id}}">{{spell.spell_name}}</option>
+                          {% endfor %}      
+                        </select>
+                    </div>
+                    <script type="text/javascript" src="{% static 'multiselect/js/virtual-select.min.js' %}"></script>
+                    <script type="text/javascript">
+                        VirtualSelect.init({ 
+                          ele: '#multi_option' 
+                        });
+                    </script>
+                   
+                    </div>  
+                    <div class="col-6" style="margin-top: 30px ">
+                        <label for="race" class="form-label" style="font-size: 16pt;">Race</label>
+                        <select class="form-select" name="race_id" required>
+                            <option value=""></option>
+                            {% for race in race_list %}
+                            <option value="{{race.id}}"> {{race.name}}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+                 
+                </div>     
+                <div class="row">
+                    <div class="col-md-6 offset-md-3" style="padding: 20px; margin-top: 100px; margin-bottom: 200px;">
+                        
+                        <button class="w-100 btn btn-primary btn-lg" type="submit" style="font-size: 18pt;">Create</button>
+                                          
+                    </div>
+                </div>
+   
+
+            </div>
+        </form>
+       
+           
+    </div>
+</main>
+
+
+
+<script type="text/javascript" src="{% static 'list-group/js/jquery.min.js' %}"></script>
+
+
+
+
+
+{% endblock %}

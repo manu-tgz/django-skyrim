@@ -1,0 +1,123 @@
+{% extends "base.html"%}
+{% load static %}
+
+{% block content %}  
+
+
+<link rel="stylesheet" href="{% static 'progress-bar.css' %}">
+
+
+ <main class="px-3" style="font-size: 14pt;">
+
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">     
+        <div class="card" style="background-color: rgba(0, 0, 0, .1); border-color: whitesmoke; margin-top: 50px; margin-bottom: 200px;">
+           <div class="card-body">
+                <div class="container-bar">
+                    <ul class="progressbar">
+                        <li class="active">Select Place</li>
+                        <li>Select Characters</li>
+                        <li>Battle Results</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <div class="row" > 
+                         <div class="col-4" style="margin-top: 50px;">
+                             <h4>Hour</h4> 
+                             <p>{{battle.time}}</p>
+
+                         </div>
+                         <div class="col-4" style="margin-top: 50px;">
+                             <h4>Date</h4> 
+                             <p>{{battle.date}}</p>
+
+                         </div>
+                         <div class="col-4" style="margin-top: 50px;">
+                             <h4>Place</h4> 
+                             <p>{{battle.place_name}}</p>
+
+                         </div>                    
+                     
+                    </div>
+                    <div class="row" >
+                        
+                        <h4 style="margin-top: 50px;">Battle Characters</h4>
+                        
+                        <div class="table-responsive" style="margin-top: 10px;">
+                            <table class="table table-striped table-sm text-white">
+                                <thead>
+                                    <td>Name</td>
+                                    <td>Race</td>
+                                </thead>
+                                <tbody>
+                                    
+                                    {% for character in fighters%}
+                                    <tr>
+                                        <td class="list-grop-item" style="color: white;">{{character.Nombre}}</td> 
+                                        <td class="list-grop-item" style="color: white;">{{character.Raza_label}}</td>
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                            
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6" style="margin-top: 50px;">
+                            <h5>Strongest Character in the Battle: </h5>
+                            <ul>
+                                {%for item in stats.most_violent%}
+                                    <li><p>{{item.id_attacker__character_name}}</p>
+                                    <p>{{item.damage_points}}</p></li>
+                                {%endfor%}
+                            </ul>
+                            
+                            
+                        </div>
+                        <div class="col-6" style="margin-top: 50px;">
+                            <h5>Weakest Character in the Battle: </h5>
+                            <ul>
+                                {%for item in stats.less_violent%}
+                                    <li><p>{{item.id_attacker__character_name}}</p>
+                                    <p>{{item.damage_points}}</p></li>
+                                {%endfor%}
+                            </ul>
+                        </div>                           
+                    </div>
+                    <div class="row">
+                        <div class="col-6" style="margin-top: 50px;">
+                            <h5>Most Damaged Character in the Battle: </h5>
+                            <ul>
+                                {%for item in stats.most_damaged%}
+                                    <li><p>{{item.id_damaged__character_name}}</p>
+                                    <p>{{item.damage_points}}</p></li>
+                                {%endfor%}
+                            </ul>
+                        </div>
+                        <div class="col-6" style="margin-top: 50px;">
+                            <h5>Less Damaged Character in the Battle: </h5>
+                            <ul>
+                                {%for item in stats.less_damaged%}
+                                    <li><p>{{item.id_damaged__character_name}}</p>
+                                    <p>{{item.damage_points}}</p></li>
+                                {%endfor%}
+                            </ul>
+                        </div>                           
+                    </div>
+
+                    <div class="row" style="margin-top: 50px;">
+                        <h5>Winner</h5>
+                        <p>{{winner.name}}</p>
+                    </div>
+                </div>
+                                 
+                    
+            </div>
+           
+        </div>
+    </div>
+ </main>
+
+ {% endblock %}

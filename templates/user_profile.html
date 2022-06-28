@@ -1,0 +1,106 @@
+{% extends "base.html"%}
+{% load static %}
+
+{% block content %}
+  
+  <div class="container">
+    <div class="row" style="margin-top: 100px;" >
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse" style="margin-top: 100px;">
+            <div class="position-sticky pt-3">
+              <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item " >
+                  <a class="nav-link text-white  bg-dark"  href="{% url 'user_profile' %}" >
+                   <span data-feather="query1" class="align-text-bottom"></span>
+                    Profile
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-white  bg-dark" href="{% url 'user_characters' %}">
+                    <span data-feather="query2" class="align-text-bottom"></span>
+                    Entities Created
+                  </a>
+                </li>               
+              </ul>
+            </div>
+        </nav> 
+    </div> 
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          
+          <form method="post" action="">
+                      
+            {% csrf_token %}
+            <div class="row g-3">
+              <h2>Basic Info</h2>
+              <div class="col-6">
+                <label for="firstName" class="form-label" style="font-size: 16pt;">First name</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="" value="{{my_user.first_name}}" disabled>
+                
+              </div>
+  
+              <div class="col-6">
+                <label for="lastName" class="form-label" style="font-size: 16pt;">Last name</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="" value="{{my_user.last_name}}" disabled>
+              </div>
+              
+            </div>
+           
+              
+              <div class="col-8" style="margin-left: 180px ; margin-top:20px ;">
+                <label for="username" class="form-label" style="font-size: 16pt;">Email Address</label>
+                <div class="input-group has-validation">
+                    <input type="text" class="form-control" id="email" name="email" value="{{my_user.email}}" disabled>
+                    
+                </div>
+              </div>
+
+              <hr>
+
+              <h2  style="margin-top: 20px;">Login Info</h2>
+            
+              <div class="col-4 offset-md-4">
+                <label for="firstName" class="form-label" style="font-size: 16pt; margin-top: 30px;">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="{{my_user.username}}"  disabled>
+                
+              </div>
+             
+             <div style="display: none;" id="hidden">
+                <div class="col-4 offset-md-4" style="margin-top:20px ;" >
+                  <label for="firstName" class="form-label" style="font-size: 16pt;">Password</label>
+                  <input type="password" class="form-control" id="password1" name="password1" disable>
+                </div>
+             
+                <div class="col-4 offset-md-4" style="margin-top:20px ;" >
+                  <label for="firstName" class="form-label" style="font-size: 16pt;">Password</label>
+                  <input type="password" class="form-control" id="password2" name="password2" disable>
+                </div>
+             </div>
+
+            
+
+              <div class="col-auto" style="margin-top: 30px;" id="profile">
+
+                <a type="button" class="btn btn-secondary" style=" margin-top: 20px; font-size: 18pt;" onclick="myenable()" id="btn-edit"><i class="fa fa-pencil fa-fw"></i></a>
+
+              </div>
+              <div id="messages">
+                {% for message in messages %}
+                 <p style="color: red;">{{message}}</p>
+                {% endfor %}
+              </div> 
+
+                     
+          </form>
+        </main>
+         
+          
+  </div>
+
+    <script src="{% static 'edit_profile/edit_profile.js' %}"></script>
+    {% if from_operation %}
+    <script type="text/javascript">
+      myenable();
+    </script>
+    {% endif %}
+ 
+
+{% endblock %}

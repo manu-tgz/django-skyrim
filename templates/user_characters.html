@@ -1,0 +1,64 @@
+{% extends "base.html"%}
+{% load static %}
+
+{% block content %}
+  
+  <div class="container">
+    <div class="row" style="margin-top: 100px;" >
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse" style="margin-top: 100px;">
+            <div class="position-sticky pt-3">
+              <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item " >
+                  <a class="nav-link text-white  bg-dark"  href="{% url 'user_profile' %}" >
+                   <span data-feather="query1" class="align-text-bottom"></span>
+                    Profile
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-white  bg-dark" href="{% url 'user_characters' %}">
+                    <span data-feather="query2" class="align-text-bottom"></span>
+                    Entities Created
+                  </a>
+                </li>               
+              </ul>
+            </div>
+        </nav> 
+    </div> 
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <form class="d-flex" role="search" method="get">
+            
+            <input class="form-control me-2" type="search" placeholder="Search" name = "query" aria-label="Search">
+            <button class="btn btn-primary" type="submit">Search</button>
+            
+          </form>
+
+        
+            <div class="table-responsive" style="margin-top: 50px;">
+                <table class=" table table-dark table-striped">
+                    <thead>
+                        <td>Nombre</td>
+                        <td>Raza</td>
+                        <td>Puntos de Vida</td>
+                        <td>Tipo</td>
+                        <td></td>
+                    </thead>
+                    {%for character in character_list%}
+                        <tr>
+                            <td>{{character.Nombre}}</td>
+                            <td>{{character.Raza_label}}</td>
+                            <td>{{character.Puntos_de_Vida}}</td>
+                            <td>{{character.Tipo}}</td>                            
+                        </tr>
+                    {% endfor %}    
+                </table>
+
+            </div>
+        </main>
+         
+          
+    </div>
+
+    <script src="{% static 'edit_profile/edit_profile.js' %}"></script>
+ 
+
+{% endblock %}
