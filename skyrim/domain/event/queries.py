@@ -9,7 +9,7 @@ def get_event_list(battle_id):
             Event_for_Battle(
                 id_event = event.id_event,
                 id_battle = event.id_battle.id,
-                id_attacker = event.id_attcker.id,
+                id_attacker = event.id_attacker.id,#ARREGLADO
                 id_damaged = event.id_damaged.id,
                 id_attack = event.id_attack.id,
                 health_points_before = event.health_points_before,

@@ -18,7 +18,7 @@ def get_all_player_races():
     return result
 
 def get_weakness_from_character_id(character_id):
-    character = Character.objects.get(character_id)
+    character = Character.objects.get(id = character_id)#ARREGLADO
     return get_weakness_from_character(character)
 
 def get_weakness_from_character(character):
