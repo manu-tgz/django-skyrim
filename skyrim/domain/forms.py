@@ -1,6 +1,10 @@
+from dataclasses import fields
 from django import forms
 from skyrim.data.models import Race,Spell
 from django.forms import widgets
+
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 class FormPlayer(forms.Form):
     name=forms.CharField(label="Name", max_length=30,required=True)
@@ -9,4 +13,5 @@ class FormPlayer(forms.Form):
     known_spells=forms.ModelMultipleChoiceField(label="Known Spells", queryset=Spell.objects.all(), widget=widgets.SelectMultiple(attrs={'size':10}))
  
 
+    
        
